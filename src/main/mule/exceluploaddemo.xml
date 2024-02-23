@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="df6ebf2f-6421-4dea-9595-9c697ec2a86c" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="306f141f-567b-4e60-9097-921749576e08" >
+		<file:connection workingDir="C:\Users\tvete\OneDrive\Desktop" />
+	</file:config>
+	<flow name="exceluploaddemoFlow" doc:id="7d84c7d3-a0d6-46d0-9a7c-c6d74083f9d5" >
+		<http:listener doc:name="Listener" doc:id="2b94a499-fdfb-49f9-b5f8-113d6b36fbad" config-ref="HTTP_Listener_config" path="/excel"/>
+		<file:read doc:name="Read" doc:id="461f132e-e04e-404d-80d2-571a1e6ad07f" config-ref="File_Config" path="upload.xlsx" outputMimeType="application/xlsx"/>
+		<ee:transform doc:name="Transform Message" doc:id="0ec7e3af-cd1b-401f-aedd-40b9adf62c13" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="83fa5735-3698-42dc-9862-1c256ba90b6c" />
+	</flow>
+</mule>
